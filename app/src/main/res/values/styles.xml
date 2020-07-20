@@ -19,4 +19,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">italic</item>
     </style>
+
+    <style name="text_sup">
+        <item name="android:color">#6e6e6e</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">13sp</item>
+    </style>
 </resources>
