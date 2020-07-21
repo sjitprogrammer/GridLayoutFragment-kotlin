@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 
-class ItemsAdapter (val items:List<Item>,val context:Context) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view:View = LayoutInflater.from(parent.context).inflate(R.layout.items_row,parent,false)
         return ViewHolder(view)
@@ -29,6 +29,10 @@ class ItemsAdapter (val items:List<Item>,val context:Context) : RecyclerView.Ada
             .into(holder.imageView);
         holder.text_title.text = item.title
         holder.text_price.text = "# "+item.number.toString()
+
+        holder.itemView.setOnClickListener {
+            onItemClickListener.onClickedItem(position)
+        }
 
     }
 

@@ -2,18 +2,21 @@ package com.example.testapplication
 
 
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(),OnItemClickListener {
+
     val listItem:ArrayList<Item> = ArrayList()
     val tempItem:ArrayList<Item> = ArrayList()
     override fun onCreateView(
@@ -86,7 +89,16 @@ class HomeFragment : Fragment() {
     private fun showData(items :List<Item>){
         val gridLayoutManager = GridLayoutManager(requireContext(),2)
         recyclerview.layoutManager = gridLayoutManager
-        recyclerview.adapter = ItemsAdapter(tempItem,requireContext())
+        recyclerview.adapter = ItemsAdapter(tempItem,requireContext(),this)
     }
+
+    override fun onClickedItem(position: Int) {
+        var item_args = tempItem[position]
+        val bundle = bundleOf("item_args" to item_args)
+        findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+//        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment()
+//        findNavController().navigate(action)
+    }
+
 
 }
