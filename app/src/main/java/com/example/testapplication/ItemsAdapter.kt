@@ -23,6 +23,7 @@ class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickList
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 //        Picasso.get().load(item.imageUrl).into(holder.imageView);
+        holder.imageView.transitionName = "image_${item.number}"
         Glide.with(context)
             .load(item.imageUrl)
             .placeholder(R.drawable.placeholder_image)
@@ -31,7 +32,7 @@ class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickList
         holder.text_price.text = "# "+item.number.toString()
 
         holder.itemView.setOnClickListener {
-            onItemClickListener.onClickedItem(position)
+            onItemClickListener.onClickedItem(it,position)
         }
 
     }
@@ -40,5 +41,7 @@ class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickList
         val imageView:ImageView = view.findViewById(R.id.imageView)
         val text_title:TextView = view.findViewById(R.id.textView_title)
         val text_price:TextView = view.findViewById(R.id.textView_number)
+
+
     }
 }

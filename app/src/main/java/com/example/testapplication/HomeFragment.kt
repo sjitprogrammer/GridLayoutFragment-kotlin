@@ -9,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.items_row.*
+import kotlinx.android.synthetic.main.items_row.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,6 +33,8 @@ class HomeFragment : Fragment(),OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listItem.clear()
+        tempItem.clear()
         fetchData()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -90,12 +96,23 @@ class HomeFragment : Fragment(),OnItemClickListener {
         val gridLayoutManager = GridLayoutManager(requireContext(),2)
         recyclerview.layoutManager = gridLayoutManager
         recyclerview.adapter = ItemsAdapter(tempItem,requireContext(),this)
+        recyclerview.apply {
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
+        }
     }
 
-    override fun onClickedItem(position: Int) {
+    override fun onClickedItem(view: View,position: Int) {
         var item_args = tempItem[position]
+        val number = tempItem[position].number
         val bundle = bundleOf("item_args" to item_args)
-        findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+        val extras = FragmentNavigatorExtras(
+            view.imageView to "image_$number"
+        )
+        findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle,null,extras)
 //        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment()
 //        findNavController().navigate(action)
     }
