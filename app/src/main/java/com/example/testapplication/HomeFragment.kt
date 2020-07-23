@@ -8,10 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.testapplication.internet.database.Pokemon
+import com.example.testapplication.util.hide
+import com.example.testapplication.util.show
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.items_row.*
@@ -19,10 +25,11 @@ import kotlinx.android.synthetic.main.items_row.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomeFragment : Fragment(),OnItemClickListener {
+class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
 
-    val listItem:ArrayList<Item> = ArrayList()
-    val tempItem:ArrayList<Item> = ArrayList()
+    val listItem:ArrayList<Pokemon> = ArrayList()
+    val tempItem:ArrayList<Pokemon> = ArrayList()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,9 +40,26 @@ class HomeFragment : Fragment(),OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listItem.clear()
-        tempItem.clear()
-        fetchData()
+
+        val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        viewModel.homeListener = this
+        if(tempItem.size==0) {
+            listItem.clear()
+            tempItem.clear()
+            viewModel.fetchAllPokemon()
+        }
+        viewModel._pokemonList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            if(it.size>0){
+                listItem.clear()
+                tempItem.clear()
+                listItem.addAll(it)
+                tempItem.addAll(it)
+                showData()
+            }
+        })
+//        listItem.clear()
+//        tempItem.clear()
+//        fetchData()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return true
@@ -48,7 +72,7 @@ class HomeFragment : Fragment(),OnItemClickListener {
                     val search = newText.toLowerCase(Locale.getDefault())
 
                     listItem.forEach{
-                        if(it.title?.toLowerCase(Locale.getDefault())?.contains(search)!!){
+                        if(it.name?.toLowerCase(Locale.getDefault())?.contains(search)!!){
                             tempItem.add(it)
                         }
                     }
@@ -72,27 +96,27 @@ class HomeFragment : Fragment(),OnItemClickListener {
     private fun fetchData(){
 
 
-        listItem.add(Item("Suicune","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/245.png",245))
-        listItem.add(Item("Entei","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/244.png",244))
-        listItem.add(Item("Raikou","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/243.png",243))
-        listItem.add(Item("Charizard","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/006.png",6))
-        listItem.add(Item("Dragonite","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/149.png",149))
-        listItem.add(Item("Milotic","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/350.png",350))
-        listItem.add(Item("Dialga","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/483.png",483))
-        listItem.add(Item("Darkrai","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/491.png",491))
-        listItem.add(Item("Arcanine","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/059.png",59))
-        listItem.add(Item("Lugia","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/249.png",249))
-        listItem.add(Item("Ho-Oh","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/250.png",250))
-        listItem.add(Item("Noivern","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/715.png",715))
-        listItem.add(Item("Salamence","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/373.png",373))
-        listItem.add(Item("Blaziken","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/257.png",257))
-        listItem.add(Item("Bulbasaur","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png",1))
-
-        showData(listItem)
-        tempItem.addAll(listItem)
+//        listItem.add(Item("Suicune","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/245.png",245))
+//        listItem.add(Item("Entei","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/244.png",244))
+//        listItem.add(Item("Raikou","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/243.png",243))
+//        listItem.add(Item("Charizard","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/006.png",6))
+//        listItem.add(Item("Dragonite","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/149.png",149))
+//        listItem.add(Item("Milotic","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/350.png",350))
+//        listItem.add(Item("Dialga","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/483.png",483))
+//        listItem.add(Item("Darkrai","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/491.png",491))
+//        listItem.add(Item("Arcanine","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/059.png",59))
+//        listItem.add(Item("Lugia","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/249.png",249))
+//        listItem.add(Item("Ho-Oh","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/250.png",250))
+//        listItem.add(Item("Noivern","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/715.png",715))
+//        listItem.add(Item("Salamence","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/373.png",373))
+//        listItem.add(Item("Blaziken","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/257.png",257))
+//        listItem.add(Item("Bulbasaur","https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png",1))
+//
+//        showData(listItem)
+//        tempItem.addAll(listItem)
     }
 
-    private fun showData(items :List<Item>){
+    private fun showData(){
         val gridLayoutManager = GridLayoutManager(requireContext(),2)
         recyclerview.layoutManager = gridLayoutManager
         recyclerview.adapter = ItemsAdapter(tempItem,requireContext(),this)
@@ -107,7 +131,7 @@ class HomeFragment : Fragment(),OnItemClickListener {
 
     override fun onClickedItem(view: View,position: Int) {
         var item_args = tempItem[position]
-        val number = tempItem[position].number
+        val number = tempItem[position].id
         val bundle = bundleOf("item_args" to item_args)
         val extras = FragmentNavigatorExtras(
             view.imageView to "image_$number"
@@ -115,6 +139,20 @@ class HomeFragment : Fragment(),OnItemClickListener {
         findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle,null,extras)
 //        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment()
 //        findNavController().navigate(action)
+    }
+
+    override fun fetchAllPokemon() {
+        progressBar.show()
+    }
+
+    override fun onSuccess() {
+        progressBar.hide()
+        Toast.makeText(requireContext(),"fetch success",Toast.LENGTH_LONG).show()
+    }
+
+    override fun onFailure(message: String) {
+        progressBar.hide()
+        Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
     }
 
 

@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.testapplication.internet.database.Pokemon
 import com.squareup.picasso.Picasso
 
-class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+class ItemsAdapter (val items:List<Pokemon>,val context:Context,val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view:View = LayoutInflater.from(parent.context).inflate(R.layout.items_row,parent,false)
         return ViewHolder(view)
@@ -23,13 +24,14 @@ class ItemsAdapter (val items:List<Item>,val context:Context,val onItemClickList
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 //        Picasso.get().load(item.imageUrl).into(holder.imageView);
-        holder.imageView.transitionName = "image_${item.number}"
+        holder.imageView.transitionName = "image_${item.id}"
+        val imageUrl :String="https://pokeres.bastionbot.org/images/pokemon/${item.id}.png"
         Glide.with(context)
-            .load(item.imageUrl)
+            .load(imageUrl)
             .placeholder(R.drawable.placeholder_image)
             .into(holder.imageView);
-        holder.text_title.text = item.title
-        holder.text_price.text = "# "+item.number.toString()
+        holder.text_title.text = item.name
+        holder.text_price.text = "# "+item.id.toString()
 
         holder.itemView.setOnClickListener {
             onItemClickListener.onClickedItem(it,position)
