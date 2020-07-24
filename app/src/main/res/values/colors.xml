@@ -18,4 +18,5 @@
     <color name="bug">#999966</color>
     <color name="eletric">#ffff00</color>
     <color name="flying">#bfbfbf</color>
+    <color name="red_color">#ff3300</color>
 </resources>

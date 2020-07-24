@@ -40,6 +40,7 @@ class DetailFragment : Fragment() {
         var item: Pokemon = arguments?.getParcelable("item_args")!!
         val pokemonType = item.types;
         val abilities = item.abilities
+        val stats = item.stats
         imageView_icon.transitionName = "image_${item.id}"
         val imageUrl: String = "https://pokeres.bastionbot.org/images/pokemon/${item.id}.png"
         Glide.with(this)
@@ -48,7 +49,8 @@ class DetailFragment : Fragment() {
             .into(imageView_icon);
         textView_number.text = "Number : " + item.id.toString()
         textView_name.text = item.name
-        text_height.text = item.height.toString()+"\""
+        Log.e("test","height : ${item.height} = "+(item.height/10))
+        text_height.text = (item.height*0.1).toFloat().toString() +" m"
         text_weight.text = item.weight.toString()+" lbs"
         text_category.text = "-"
         abilities.forEach {
@@ -61,6 +63,28 @@ class DetailFragment : Fragment() {
             Log.e("Detailfragment",""+listItems.size)
             recyclerview_type.adapter?.notifyDataSetChanged()
         }
+        var total = 0;
+        stats.forEach {
+            val stat = it.stat.name
+            val value = it.base_stat
+            total+=value
+            if(stat.equals("hp")){
+                text_hp.text = value.toString()
+            }else if(stat.equals("attack")){
+                text_attack.text = value.toString()
+            }else if(stat.equals("attack")){
+                text_attack.text = value.toString()
+            }else if(stat.equals("defense")){
+                text_defense.text = value.toString()
+            }else if(stat.equals("special-attack")){
+                text_sp_atk.text = value.toString()
+            }else if(stat.equals("special-defense")){
+                text_sp_def.text = value.toString()
+            }else if(stat.equals("speed")){
+                text_speed.text = value.toString()
+            }
+        }
+        text_total.text = total.toString()
         Log.e("Detailfragment",""+pokemonType.size)
         setType()
         imageView_back.setOnClickListener {
