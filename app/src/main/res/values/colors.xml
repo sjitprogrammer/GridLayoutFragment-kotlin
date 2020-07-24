@@ -9,4 +9,13 @@
     <color name="colorAccent_gradient">#03DAC5</color>
 
     <color name="blue_background">#3C45E8</color>
+    <color name="fire">#ff9900</color>
+    <color name="poison">#cc3399</color>
+    <color name="grass">#99cc00</color>
+    <color name="water">#3399ff</color>
+    <color name="dragon">#d1e0e0</color>
+    <color name="pyschic">#ff6699</color>
+    <color name="bug">#999966</color>
+    <color name="eletric">#ffff00</color>
+    <color name="flying">#bfbfbf</color>
 </resources>

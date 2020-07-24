@@ -54,10 +54,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun fetchPokemonData() {
+        val count = _pokemonFetchAll.value?.size
+        Log.e(TAG, "_pokemonFetchAll : $count")
+        var i:Int = 0
         _pokemonFetchAll.value?.forEach {
+            
             MyApi.retrofitService.fetchPokemonData(it.url).enqueue(object : Callback<Pokemon> {
                 override fun onFailure(call: Call<Pokemon>, t: Throwable) {
-                    Log.e(TAG, "error : " + t)
+                    Log.e(TAG, "error: ${i} : " + t)
                 }
 
                 override fun onResponse(
@@ -66,7 +70,7 @@ class HomeViewModel : ViewModel() {
                 ) {
 
                     if (response.isSuccessful) {
-                        Log.e(TAG, "fetchPokemonData")
+//                        Log.e(TAG, "fetchPokemonData")
                         val body = response.body()
                         val pokemon: Pokemon = body!!
 //                        Log.e(TAG + 1, pokemon.toString())
@@ -80,11 +84,10 @@ class HomeViewModel : ViewModel() {
 
             })
         }
-        homeListener?.onSuccess()
 
     }
 
-    private fun renderPokemon() {
-
+    fun LoadPokemonFinish() {
+        homeListener?.onSuccess()
     }
 }

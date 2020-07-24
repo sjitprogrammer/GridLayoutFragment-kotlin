@@ -3,6 +3,7 @@ package com.example.testapplication
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,17 +45,20 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
         val viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         viewModel.homeListener = this
         if(tempItem.size==0) {
-            listItem.clear()
-            tempItem.clear()
             viewModel.fetchAllPokemon()
         }
+        showData(tempItem)
         viewModel._pokemonList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            if(it.size>0){
+
+            if(it.size>=151){
+//                Log.e("HomeFragment","_pokemonList.observe")
+                viewModel.LoadPokemonFinish()
                 listItem.clear()
                 tempItem.clear()
                 listItem.addAll(it)
                 tempItem.addAll(it)
-                showData()
+//                showData(tempItem)
+                recyclerview.adapter?.notifyDataSetChanged()
             }
         })
 //        listItem.clear()
@@ -116,10 +120,10 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
 //        tempItem.addAll(listItem)
     }
 
-    private fun showData(){
+    private fun showData(item:List<Pokemon>){
         val gridLayoutManager = GridLayoutManager(requireContext(),2)
         recyclerview.layoutManager = gridLayoutManager
-        recyclerview.adapter = ItemsAdapter(tempItem,requireContext(),this)
+        recyclerview.adapter = ItemsAdapter(item,requireContext(),this)
         recyclerview.apply {
             postponeEnterTransition()
             viewTreeObserver.addOnPreDrawListener {
@@ -129,16 +133,15 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
         }
     }
 
-    override fun onClickedItem(view: View,position: Int) {
+    override fun onClickedItem(view: View,id:Int,position: Int) {
         var item_args = tempItem[position]
         val number = tempItem[position].id
         val bundle = bundleOf("item_args" to item_args)
+//        Log.e("HomeFragment","image_$number")
         val extras = FragmentNavigatorExtras(
             view.imageView to "image_$number"
         )
         findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle,null,extras)
-//        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment()
-//        findNavController().navigate(action)
     }
 
     override fun fetchAllPokemon() {
@@ -147,7 +150,6 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
 
     override fun onSuccess() {
         progressBar.hide()
-        Toast.makeText(requireContext(),"fetch success",Toast.LENGTH_LONG).show()
     }
 
     override fun onFailure(message: String) {

@@ -34,7 +34,7 @@ class ItemsAdapter (val items:List<Pokemon>,val context:Context,val onItemClickL
         holder.text_price.text = "# "+item.id.toString()
 
         holder.itemView.setOnClickListener {
-            onItemClickListener.onClickedItem(it,position)
+            onItemClickListener.onClickedItem(it,item.id,position)
         }
 
     }
