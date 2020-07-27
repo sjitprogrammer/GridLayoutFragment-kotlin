@@ -8,7 +8,7 @@
 
 
     <ImageView
-            android:src="@drawable/pokemon_logo"
+            android:src="@drawable/logo_pokedex"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:id="@+id/imageView2"

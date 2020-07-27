@@ -19,4 +19,5 @@
     <color name="eletric">#ffff00</color>
     <color name="flying">#bfbfbf</color>
     <color name="red_color">#ff3300</color>
+    <color name="red_bg">#F95456</color>
 </resources>
