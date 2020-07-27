@@ -24,6 +24,4 @@ implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_exten
 
 <img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/detail.jpg" width="300"> 
     
-<img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/60570.jpg" width="300">
-
-<img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/60571.jpg" width="300">
+<img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/61806.jpg" width="300">
