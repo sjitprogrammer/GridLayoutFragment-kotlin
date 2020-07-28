@@ -20,7 +20,7 @@ implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 // ViewModel and LiveData
 implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
     
-<img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/61656.gif" width="300"> 
+<img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/61849.gif" width="300"> 
 
 <img src="https://github.com/sjitprogrammer/GridLayoutFragment-kotlin/blob/master/image/detail.jpg" width="300"> 
     

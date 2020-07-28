@@ -28,7 +28,7 @@ class ItemsAdapter (val items:List<Pokemon>,val context:Context,val onItemClickL
         val imageUrl :String="https://pokeres.bastionbot.org/images/pokemon/${item.id}.png"
         Glide.with(context)
             .load(imageUrl)
-            .placeholder(R.drawable.placeholder_image)
+            .placeholder(R.drawable.placeholder_pokeball)
             .into(holder.imageView);
         holder.text_title.text = item.name
         holder.text_price.text = "# "+item.id.toString()

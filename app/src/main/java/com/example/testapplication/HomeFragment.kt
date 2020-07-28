@@ -1,30 +1,32 @@
 package com.example.testapplication
 
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.transition.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.DecelerateInterpolator
+import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.testapplication.internet.database.Pokemon
-import com.example.testapplication.util.hide
-import com.example.testapplication.util.show
-import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.items_row.*
 import kotlinx.android.synthetic.main.items_row.view.*
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
 
@@ -48,22 +50,22 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
             viewModel.fetchAllPokemon()
         }
         showData(tempItem)
+        refreshLayout.setOnRefreshListener {
+            listItem.clear()
+            tempItem.clear()
+            viewModel.fetchAllPokemon()
+        }
         viewModel._pokemonList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
 
             if(it.size>=151){
-//                Log.e("HomeFragment","_pokemonList.observe")
                 viewModel.LoadPokemonFinish()
                 listItem.clear()
                 tempItem.clear()
                 listItem.addAll(it)
                 tempItem.addAll(it)
-//                showData(tempItem)
                 recyclerview.adapter?.notifyDataSetChanged()
             }
         })
-//        listItem.clear()
-//        tempItem.clear()
-//        fetchData()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return true
@@ -131,6 +133,73 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
                 true
             }
         }
+        recyclerview.addOnScrollListener(object : HidingScrollListener() {
+            override fun onHide() {
+                hideViews()
+            }
+
+            override fun onShow() {
+                showViews()
+            }
+        })
+    }
+
+    private fun hideViews() {
+
+        val removeheight = imageView2.height+50
+        imageView2.animate().translationY((-removeheight).toFloat())
+            .setDuration(500)
+            .setInterpolator(AccelerateInterpolator(2F))
+            .setListener(object: Animator.AnimatorListener {
+                override fun onAnimationRepeat(animation: Animator?) {
+                }
+
+                override fun onAnimationEnd(animation: Animator?) {
+                    imageView2.visibility = View.GONE
+                }
+
+                override fun onAnimationCancel(animation: Animator?) {
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                }
+
+            }).start()
+//        searchView.animate().translationY((-removeheight).toFloat())
+//            .setDuration(500)
+//            .setInterpolator(AccelerateInterpolator(2F)).start()
+//        recyclerview.animate().translationY((-removeheight).toFloat())
+//            .setInterpolator(AccelerateInterpolator(2F))
+
+        //        imageView2.animation = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_up)
+
+
+    }
+
+    private fun showViews() {
+//        imageView2.animation = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_down)
+        imageView2.animate().translationY(0F)
+            .setDuration(500)
+            .setInterpolator(DecelerateInterpolator(2F))
+            .setListener(object: Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                imageView2.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+//                imageView2.visibility = View.INVISIBLE
+                imageView2.visibility = View.VISIBLE
+            }
+
+        }).start()
+        searchView.animate().translationY(0F).setDuration(500).setInterpolator(DecelerateInterpolator(2F)).start()
+//        imageView2.visibility = View.VISIBLE
     }
 
     override fun onClickedItem(view: View,id:Int,position: Int) {
@@ -145,15 +214,18 @@ class HomeFragment : Fragment(),OnItemClickListener,HomeListener {
     }
 
     override fun fetchAllPokemon() {
-        progressBar.show()
+        refreshLayout.isRefreshing = true
+//        progressBar.show()
     }
 
     override fun onSuccess() {
-        progressBar.hide()
+//        progressBar.hide()
+        refreshLayout.isRefreshing = false
     }
 
     override fun onFailure(message: String) {
-        progressBar.hide()
+//        progressBar.hide()
+        refreshLayout.isRefreshing = false
         Toast.makeText(requireContext(),message,Toast.LENGTH_LONG).show()
     }
 

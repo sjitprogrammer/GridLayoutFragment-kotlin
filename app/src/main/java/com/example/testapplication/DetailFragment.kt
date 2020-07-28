@@ -45,7 +45,7 @@ class DetailFragment : Fragment() {
         val imageUrl: String = "https://pokeres.bastionbot.org/images/pokemon/${item.id}.png"
         Glide.with(this)
             .load(imageUrl)
-            .placeholder(R.drawable.placeholder_image)
+            .placeholder(R.drawable.placeholder_pokeball)
             .into(imageView_icon);
         textView_number.text = "Number : " + item.id.toString()
         textView_name.text = item.name
@@ -88,8 +88,9 @@ class DetailFragment : Fragment() {
         Log.e("Detailfragment",""+pokemonType.size)
         setType()
         imageView_back.setOnClickListener {
-            findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
-            postponeEnterTransition()
+//            findNavController().navigate(R.id.action_detailFragment_to_homeFragment)
+//            postponeEnterTransition()
+            getActivity()?.onBackPressed();
         }
     }
 

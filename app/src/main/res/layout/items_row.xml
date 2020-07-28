@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:padding="10dp"
-                app:srcCompat="@drawable/placeholder_image" />
+                app:srcCompat="@drawable/placeholder_pokeball" />
 
         <TextView
                 android:id="@+id/textView_title"

@@ -29,6 +29,9 @@ class HomeViewModel : ViewModel() {
 //    }
 
     fun fetchAllPokemon() {
+        _pokemonFetchAll.value = ArrayList()
+        _pokemonList.value = ArrayList()
+        list.clear()
         homeListener?.fetchAllPokemon()
         MyApi.retrofitService.fetchAllPokemon().enqueue(object : Callback<PokemonList> {
             override fun onFailure(call: Call<PokemonList>, t: Throwable) {
